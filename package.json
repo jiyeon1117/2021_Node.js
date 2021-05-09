@@ -1,15 +1,24 @@
 {
   "name": "node1",
   "version": "1.0.0",
-  "description": "",
   "main": "main.js",
   "dependencies": {
+    "mine": "^0.1.0",
     "sanitize-html": "^2.3.3"
   },
   "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jiyeon1117/WEB2-node1.git"
+  },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jiyeon1117/WEB2-node1/issues"
+  },
+  "homepage": "https://github.com/jiyeon1117/WEB2-node1#readme",
+  "description": ""
 }
