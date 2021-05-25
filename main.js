@@ -6,8 +6,10 @@ const qs = require('querystring');
 const bodyParser = require('body-parser');
 const sanitizeHtml = require('sanitize-html');
 const template = require('./lib/template');
+const compression = require('compression');
 
 app.use(bodyParser.urlencoded({extended: false}))
+app.use(compression());
 
 app.get('/', function(req, res) {
     fs.readdir('data/', function (err, data) {
