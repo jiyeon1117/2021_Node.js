@@ -8,25 +8,35 @@ const sanitizeHtml = require('sanitize-html');
 const template = require('./lib/template');
 const compression = require('compression');
 
+app.use(express.static('public'));
+
 app.use(bodyParser.urlencoded({extended: false}))
 app.use(compression());
+app.get('*', function (req,res, next){
+   fs.readdir('data/', function (err, data){
+      req.filelist = data;
+      next();
+   });
+});
 
 app.get('/', function(req, res) {
-    fs.readdir('data/', function (err, data) {
+    // fs.readdir('data/', function (err, data) {
         const title = 'Welcome'
         const description = 'Hello, Node.js'
-        const list = template.list(data)
+        const list = template.list(req.filelist)
         const html = template.HTML(title, list,
-            `<h2>${title}</h2>${description}`,
+            `<h2>${title}</h2>${description}
+                    <img src="images/image.jpg" style="display: block; width: 300px; height: 300px;">
+                    `,
             `<a href="/create">create</a>`
         );
         res.send(html);
-    });
+    // });
 });
 
 app.get('/page/:pageId', function (req, res) {
-    fs.readdir('data/', function (err, data) {
-        const list = template.list(data);
+    // fs.readdir('data/', function (err, data) {
+        const list = template.list(req.filelist);
         const filteredId = path.parse(req.params.pageId).base;
         fs.readFile(`data/${filteredId}`, 'utf8',
             function (err, description) {
@@ -46,13 +56,13 @@ app.get('/page/:pageId', function (req, res) {
                 );
                 res.send(html);
             });
-    });
+    // });
 });
 
 app.get('/create', function (req, res){
-    fs.readdir('./data', function (error, filelist) {
+    // fs.readdir('./data', function (error, filelist) {
         const title = 'WEB - create';
-        const list = template.list(filelist);
+        const list = template.list(req.filelist);
         const html = template.HTML(title, list, `
           <form action="/create_process" method="post">
             <p><input type="text" name="title" placeholder="title"></p>
@@ -65,7 +75,7 @@ app.get('/create', function (req, res){
           </form>
         `, '');
         res.send(html);
-    });
+    // });
 });
 
 app.post('/create_process', function(req, res){
@@ -78,11 +88,11 @@ app.post('/create_process', function(req, res){
 });
 
 app.get('/update/:pageId', function(req, res){
-    fs.readdir('./data', function (error, filelist) {
+    // fs.readdir('./data', function (error, filelist) {
         const filteredId = path.parse(req.params.pageId).base;
         fs.readFile(`data/${filteredId}`, 'utf8', function (err, description) {
             const title = req.params.pageId;
-            const list = template.list(filelist);
+            const list = template.list(req.filelist);
             const html = template.HTML(title, list,
                 `
             <form action="/update_process" method="post">
@@ -100,7 +110,7 @@ app.get('/update/:pageId', function(req, res){
             );
             res.send(html);
         });
-    });
+    // });
 });
 
 app.post('/update_process', function (req, res) {
